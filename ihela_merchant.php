@@ -1,4 +1,8 @@
 <?php 
+// require 'vendor/autoload.php';
+
+namespace Ihela;
+
 use GuzzleHttp\Client;
 
 class IhelaMerchant
@@ -8,11 +12,11 @@ class IhelaMerchant
     protected $_client;
     protected $_api_url;
 
-    public function __construct($client_id, $client_secret, $test) {
-        if ($test) {
-            $this->_api_url = 'https://testgate.ihela.online';
-        } else {
+    public function __construct($client_id, $client_secret, $prod=false) {
+        if ($prod) {
             $this->_api_url = 'https://api.ihela.online';
+        } else {
+            $this->_api_url = 'https://testgate.ihela.online';
         }
 
         // Here we get the token for all calls
@@ -32,8 +36,8 @@ class IhelaMerchant
         $client = $this->getClient();
 
         $headers = array('Content-Type' => 'application/json');
-        $res = $client->post("oAuth2/token", [
-            'auth' => [$client_id, $client_secret], 'headers' => $headers, 'json' => ['grant_type' => 'client_credentials']
+        $res = $client->post("oAuth2/token/", [
+            'auth' => [$client_id, $client_secret], 'headers' => $headers, 'json' => array('grant_type' => 'client_credentials')
         ]);
 
         // echo $res->getStatusCode();
@@ -53,7 +57,7 @@ class IhelaMerchant
         $client = $this->getClient();
 
         $data = array('amount' => $amount, 'merchant_reference' => $merchant_reference, 'description', $description, 'user' => $user, "redirect_uri", $redirect_uri);
-        $url = "api/v1/payments/bill/init";
+        $url = "api/v1/payments/bill/init/";
         $headers = array('Content-Type' => 'application/json','Authorization'=> "Bearer $this->getToken()");
 
         $response = $client->post($url, [
@@ -62,11 +66,11 @@ class IhelaMerchant
         ]);
     }
 
- public function verifyBill($code, $reference,$redirect_uri=null) {
+    public function verifyBill($code, $reference) {
         $client = $this->getClient();
 
-        $data = array('reference' => $reference, 'code' => $code , "redirect_uri", $redirect_uri);
-        $url = "api/v1/payments/bill/verify";
+        $data = array('reference' => $reference, 'code' => $code);
+        $url = "api/v1/payments/bill/verify/";
         $headers = array('Content-Type' => 'application/json','Authorization'=> "Bearer $this->getToken()");
 
         $response = $client->post($url, [
@@ -77,3 +81,7 @@ class IhelaMerchant
 
 
 }
+
+// $test = new IhelaMerchant("4sS7OWlf8pqm04j1ZDtvUrEVSZjlLwtfGUMs2XWZ", "HN7osYwSJuEOO4MEth6iNlBS8oHm7LBhC8fejkZkqDJUrvVQodKtO55bMr845kmplSlfK3nxFcEk2ryiXzs1UW1YfVP5Ed6Yw0RR6QmnwsQ7iNJfzTgeehZ2XM9mmhC3");
+
+// echo $test->initBill(2000, 2, "description ici", 'pierreclaverkoko@gmail.com');
