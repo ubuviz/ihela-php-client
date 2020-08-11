@@ -1,7 +1,7 @@
 <?php 
-// require 'vendor/autoload.php';
-
 namespace Ihela;
+
+require 'vendor/autoload.php';
 
 use GuzzleHttp\Client;
 
@@ -58,7 +58,7 @@ class IhelaMerchant
 
         $data = array('amount' => $amount, 'merchant_reference' => $merchant_reference, 'description', $description, 'user' => $user, "redirect_uri", $redirect_uri);
         $url = "api/v1/payments/bill/init/";
-        $headers = array('Content-Type' => 'application/json','Authorization'=> "Bearer $this->getToken()");
+        $headers = array('Content-Type' => 'application/json','Authorization' => "Bearer $this->getToken()");
 
         $response = $client->post($url, [
             'headers' => $headers,
@@ -71,7 +71,7 @@ class IhelaMerchant
 
         $data = array('reference' => $reference, 'code' => $code);
         $url = "api/v1/payments/bill/verify/";
-        $headers = array('Content-Type' => 'application/json','Authorization'=> "Bearer $this->getToken()");
+        $headers = array('Content-Type' => 'application/json','Authorization' => "Bearer $this->getToken()");
 
         $response = $client->post($url, [
             'headers' => $headers,
@@ -83,5 +83,6 @@ class IhelaMerchant
 }
 
 // $test = new IhelaMerchant("4sS7OWlf8pqm04j1ZDtvUrEVSZjlLwtfGUMs2XWZ", "HN7osYwSJuEOO4MEth6iNlBS8oHm7LBhC8fejkZkqDJUrvVQodKtO55bMr845kmplSlfK3nxFcEk2ryiXzs1UW1YfVP5Ed6Yw0RR6QmnwsQ7iNJfzTgeehZ2XM9mmhC3");
+$test = new IhelaMerchant("4sS7OWlf8pqm04j1ZDtvUrEVSZjlLwtfGUMs2XWZ", "HN7osYwSJuEOO4MEth6iNlBS8oHm7LBhC8fejkZkqDJUrvVQodKtO55bMr845kmplSlfK3nxFcEk2ryiXzs1UW1YfVP5Ed6Yw0RR6QmnwsQ7iNJfzTgeehZ2XM9mmhC3");
 
-// echo $test->initBill(2000, 2, "description ici", 'pierreclaverkoko@gmail.com');
+echo $test->initBill(2000, 2, "description ici", 'pierreclaverkoko@gmail.com');
