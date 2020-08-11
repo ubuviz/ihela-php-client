@@ -17,5 +17,5 @@ php composer.phar install
 
 ```php
 <?php 
-use \Ihela\MerchantClient
+use \Ihela\MerchantClient;
 ```
