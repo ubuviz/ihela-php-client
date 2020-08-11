@@ -55,7 +55,7 @@ class IhelaConnection
         $url = "api/v1/payments/bill/init";
         $headers = array('Content-Type' => 'application/json','Authorization'=> "Bearer $this->getToken()");
 
-        $response = $client->post($url, $headers, [
+        $response = $client->post($url, [
             'headers' => $headers,
             'json' => $data
         ]);
