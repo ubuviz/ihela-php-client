@@ -1,8 +1,9 @@
 <?php 
 use GuzzleHttp\Client;
 
-class IhelaConnection
+class IhelaMerchant
 {
+
     protected $_token;
     protected $_client;
     protected $_api_url;
@@ -20,7 +21,7 @@ class IhelaConnection
     }
 
     protected function setClient() {
-        $this->_client = new Client('base_uri' => $this->_api_url);
+        $this->_client = new Client(["base_uri"=> $this->_api_url]);
     }
 
     protected function getClient() {
@@ -30,9 +31,9 @@ class IhelaConnection
     protected function setToken($client_id, $client_secret) {
         $client = $this->getClient();
 
-        $headers = array('Content-Type' => 'application/json')
+        $headers = array('Content-Type' => 'application/json');
         $res = $client->post("oAuth2/token", [
-            'auth' => [$client_id, $client_secret], 'headers' => $headers, 'json': ['grant_type' => 'client_credentials']
+            'auth' => [$client_id, $client_secret], 'headers' => $headers, 'json' => ['grant_type' => 'client_credentials']
         ]);
 
         // echo $res->getStatusCode();
@@ -51,7 +52,7 @@ class IhelaConnection
     public function initBill($amount, $merchant_reference, $description, $user, $redirect_uri=null) {
         $client = $this->getClient();
 
-        $data = array('amount' => $amount, 'merchant_reference' => $merchant_reference, 'description', $description, 'user': $user, "redirect_uri", $redirect_uri);
+        $data = array('amount' => $amount, 'merchant_reference' => $merchant_reference, 'description', $description, 'user' => $user, "redirect_uri", $redirect_uri);
         $url = "api/v1/payments/bill/init";
         $headers = array('Content-Type' => 'application/json','Authorization'=> "Bearer $this->getToken()");
 
@@ -61,6 +62,4 @@ class IhelaConnection
         ]);
     }
 
-
 }
-
