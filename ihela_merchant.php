@@ -65,7 +65,7 @@ class IhelaMerchant
  public function verifyBill($code, $reference,$redirect_uri=null) {
         $client = $this->getClient();
 
-        $data = array('amount' => $amount, 'merchant_reference' => $merchant_reference, 'description', $description, 'user' => $user, "redirect_uri", $redirect_uri);
+        $data = array('reference' => $reference, 'code' => $code , "redirect_uri", $redirect_uri);
         $url = "api/v1/payments/bill/verify";
         $headers = array('Content-Type' => 'application/json','Authorization'=> "Bearer $this->getToken()");
 
