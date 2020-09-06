@@ -6,12 +6,15 @@
     "authors": [
         {
             "name": "UbuViz.com",
-            "email": "info@ubuviz.com"
+            "email": "info@ubuviz.com",
+            "homepage": "https://ubuviz.com"
         }
     ],
     "minimum-stability": "stable",
     "autoload": {
-        "psr-4": {"ihela\\Merchant\\": "src/"}
+        "psr-0": {"Ihela": "src/"}
     },
-    "require": {}
+    "require": {
+    	"php": ">=7.1.0"
+    }
 }
