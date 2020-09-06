@@ -1,5 +1,5 @@
 {
-    "name": "ihela/client",
+    "name": "ihela/api-client",
     "description": "PHP Client for iHela API",
     "type": "library",
     "license": "MIT",
