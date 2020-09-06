@@ -40,7 +40,7 @@ class IhelaMerchant
     /**
     Authenticates the merchant application in iHela
     */
-    public function authenticate() {
+    protected function authenticate() {
         $url = $this->_api_url .'/'. self::IHELA_TOKEN_URL;
         // $url = $this->_api_url .'/api/v1/users/login/';
         $payload = json_encode( array( "grant_type"=> "client_credentials" ) );
@@ -66,40 +66,8 @@ class IhelaMerchant
         $response = curl_exec($curl);
 
         curl_close($curl);
-        return json_decode($response, true);
+        $this->_auth_token_object = json_decode($response, true);
     }
-
-    // protected function setClient() {
-    //     $this->_client = new Client(["base_uri"=> $this->_api_url]);
-    // }
-
-    // protected function getClient() {
-    //     return $this->_client;
-    // }
-
-    // protected function setToken($client_id, $client_secret) {
-    //     $client = $this->getClient();
-
-    //     $headers = array('Content-Type' => 'application/json');
-    //     $res = $client->post("oAuth2/token/", [
-    //         'auth' => [$client_id, $client_secret], 'headers' => $headers, 'json' => array('grant_type' => 'client_credentials')
-    //     ]);
-    //     // $res = $client->post("api/v1/users/login/", [
-    //     //     'headers' => $headers, 'json' => array('user' => ["email" => "pierreclaverkoko@gmail.com", "password" => "pass123456", "profile_type" => "I"])
-    //     // ]);
-
-    //     // echo $res->getStatusCode();
-    //     // "200"
-    //     // echo $res->getHeader('content-type')[0];
-    //     // 'application/json; charset=utf8'
-    //     $body = $res->getBody();
-
-    //     $this->_token = $body;
-    // }
-
-    // protected function getToken() {
-    //     return $this->_token;
-    // }
 
     // protected function getAuthHeader() {
     //     $token = $this->getToken();
@@ -107,43 +75,65 @@ class IhelaMerchant
     //     return array('Content-Type' => 'application/json', 'Authorization' => "Bearer $token");
     // }
 
-    // public function initBill($amount, $merchant_reference, $description, $user, $redirect_uri=null) {
-    //     $client = $this->getClient();
+    public function initBill($amount, $merchant_reference, $description, $user, $redirect_uri=null) {
+        $url = $this->_api_url .'/'. self::IHELA_ENDPOINTS["BILL_INIT"];
+        $payload =json_encode( array(
+            'amount' => $amount, 
+            'merchant_reference' => $merchant_reference, 
+            'description', $description, 
+            'user' => $user, 
+            "redirect_uri", $redirect_uri
+        ));
 
-    //     $data = array(
-    //         'amount' => $amount, 
-    //         'merchant_reference' => $merchant_reference, 
-    //         'description', $description, 
-    //         'user' => $user, 
-    //         "redirect_uri", $redirect_uri
-    //     );
-    //     $url = "api/v1/payments/bill/init/";
-    //     $headers = $this->getAuthHeader();
+        $curl = \curl_init();
 
-    //     return $headers["Authorization"];
+        curl_setopt_array($curl, array(
+          CURLOPT_HTTPHEADER => array('Content-Type:application/json', 'Authorization:Token '.$this->_auth_token_object["access_token"]),
+          CURLOPT_URL => $url,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_HTTPAUTH => CURLAUTH_ANY,
+          CURLOPT_USERPWD => "$this->_client_id:$this->_client_secret",
+          CURLOPT_CUSTOMREQUEST => "POST",
+          CURLOPT_POSTFIELDS => $payload,
+        ));
 
-    //     $response = $client->post($url, [
-    //         'headers' => $headers,
-    //         'json' => $data
-    //     ]);
+        $response = curl_exec($curl);
 
-    //     return $response->getBody();
-    // }
+        curl_close($curl);
+        return json_decode($response, true);
+    }
 
-    // public function verifyBill($code, $reference) {
-    //     $client = $this->getClient();
+    public function verifyBill($code, $reference) {
 
-    //     $data = array('reference' => $reference, 'code' => $code);
-    //     $url = "api/v1/payments/bill/verify/";
-    //     $headers = $this->getAuthHeader();
+        $url = $this->_api_url .'/'. self::IHELA_ENDPOINTS["BILL_VERIFY"];
+        $payload =json_encode( array('reference' => $reference, 'code' => $code));
 
-    //     $response = $client->post($url, [
-    //         'headers' => $headers,
-    //         'json' => $data
-    //     ]);
+        $curl = \curl_init();
 
-    //     return $response->getBody();
-    // }
+        curl_setopt_array($curl, array(
+          CURLOPT_HTTPHEADER => array('Content-Type:application/json', 'Authorization:Token '.$this->_auth_token_object["access_token"]),
+          CURLOPT_URL => $url,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "POST",
+          CURLOPT_POSTFIELDS => $payload,
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        return json_decode($response, true);
+
+    }
 
     // public function cashinClient($bank_slug, $account, $amount, $merchant_reference, $description) {
     //     $client = $this->getClient();
@@ -166,17 +156,29 @@ class IhelaMerchant
     //     return $response->getBody();
     // }
 
-    // public function getBanks() {
-    //     $client = $this->getClient();
-    //     $headers = array('Content-Type' => 'application/json');
+    public function getBanks() {
 
-    //     $url = "api/v1/bank/all";
+        $url = $this->_api_url .'/'. self::IHELA_ENDPOINTS["BANKS_ALL"];
 
-    //     $response = $client->get($url, [
-    //         'headers' => $headers,
-    //     ]);
+        $curl = \curl_init();
 
-    //     return $response->getBody()->getContents();
-    // }
+        curl_setopt_array($curl, array(
+          CURLOPT_HTTPHEADER => array('Content-Type:application/json', 'Authorization:Token '.$this->_auth_token_object["access_token"]),
+          CURLOPT_URL => $url,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "GET",
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        return json_decode($response, true);
+
+    }
 
 }
