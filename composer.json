@@ -11,7 +11,7 @@
     ],
     "minimum-stability": "stable",
     "autoload": {
-        "psr-4": {"iHela\\Merchant\\": "src/"}
+        "psr-4": {"ihela\\Merchant\\": "src/"}
     },
     "require": {}
 }
