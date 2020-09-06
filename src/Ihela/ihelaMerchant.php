@@ -26,8 +26,8 @@ class IhelaMerchant
         if ($prod) {
             $this->_api_url = 'https://api.ihela.online';
         } else {
-            // $this->_api_url = 'https://testgate.ihela.online';
-            $this->_api_url = 'http://127.0.0.1:8080';
+            $this->_api_url = 'https://testgate.ihela.online';
+            // $this->_api_url = 'http://127.0.0.1:8080';
         }
 
         $this->_client_id = $client_id;
