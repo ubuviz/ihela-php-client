@@ -1,5 +1,17 @@
 {
-   "require": {
-      "guzzlehttp/guzzle": "^7.0"
-   }
+    "name": "ihela/client",
+    "description": "PHP Client for iHela API",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pierre-Claver K. Banywerha",
+            "email": "pierreclaverkoko@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {"iHela\\Merchant\\": "src/"}
+    },
+    "require": {}
 }
