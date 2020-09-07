@@ -1,5 +1,5 @@
 <?php
-require_once 'src/Merchant/ihelaMerchant.php';
+require_once 'src/Merchant/IhelaMerchant.php';
 
 use Ihela\Merchant\IhelaMerchant;
 
