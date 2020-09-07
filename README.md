@@ -14,6 +14,12 @@ curl -sS https://getcomposer.org/installer | php
 composer require ihela/api-client
 ```
 
+For the not-released version, use:
+
+```sh
+composer require ihela/api-client:dev-master
+```
+
 ## Import the class
 
 ```php
