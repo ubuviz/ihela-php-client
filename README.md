@@ -20,7 +20,7 @@ composer require ihela/api-client
 <?php 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use Ihela\MerchantClient;
+use Ihela\Merchant\MerchantClient;
 
 // get the iHela client
 $ihela = new MerchantClient("4sS7OWlf8pqm04j1ZDtvUrEVSZjlLwtfGUMs2XWZ", "HN7osYwSJuEOO4MEth6iNlBS8oHm7LBhC8fejkZkqDJUrvVQodKtO55bMr845kmplSlfK3nxFcEk2ryiXzs1UW1YfVP5Ed6Yw0RR6QmnwsQ7iNJfzTgeehZ2XM9mmhC3")

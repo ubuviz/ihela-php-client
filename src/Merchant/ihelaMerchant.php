@@ -1,5 +1,5 @@
 <?php 
-namespace Ihela;
+namespace Ihela\Merchant;
 
 
 class IhelaMerchant

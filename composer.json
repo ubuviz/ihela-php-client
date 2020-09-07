@@ -12,7 +12,7 @@
     ],
     "minimum-stability": "stable",
     "autoload": {
-        "psr-0": {"Ihela": "src/"}
+        "psr-4": {"Ihela": "src/"}
     },
     "require": {
     	"php": ">=7.1.0"
