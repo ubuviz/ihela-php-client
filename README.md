@@ -34,5 +34,44 @@ $ihela = new IhelaMerchant("4sS7OWlf8pqm04j1ZDtvUrEVSZjlLwtfGUMs2XWZ", "HN7osYwS
 // Initialize a bill
 $ihela->initBill(2000, "REF1", "description here", 'pierreclaverkoko@gmail.com');
 
+/*
+Response example :
+{
+    "bill": {
+        "code": "BILL-20200101-N7EKDYOU6R",
+        "amount": "<AMOUNT_IN_DECIMAL>",
+        "currency": 108,
+        "merchant": {
+            "title": "Your App Merchant Name",
+        },
+        "description": "DESCRIPTION",
+        "redirect_uri": "YOUR_BILL_CONFIRM_REDIRECT_URI",
+        "currency_info": {
+            "title": "BURUNDIAN FRANC",
+            "iso_code": 108,
+            "abbreviation": "BIF",
+            "iso_alpha_code": "BIF",
+        },
+        "confirmation_uri": "https://testgate.ihela.online/banking/bill/BILL-20200101-N7EKDYOU6R/confirm/",
+        "payment_reference": None,
+        "merchant_reference": "YOUR_APP_REFERENCE",
+    }
+}
+
+
+*/
+
+// Verify a bill
 $ihela->verifyBill("REF1", "BILL20200811439");
+
+/*
+Response sample
+
+{
+  "bank_reference": <final_payment_reference>, 
+  "reference": THE_BILL_UNIQUE_CODE, 
+  "code": YOUR_APP_REFERENCE, 
+  "status": <Paid|Pending>
+}
+*/
 ```
