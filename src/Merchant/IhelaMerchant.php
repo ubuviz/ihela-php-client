@@ -23,6 +23,7 @@ class IhelaMerchant
         "BILL_INIT"=> "api/v1/payments/bill/init/",
         "BILL_VERIFY"=> "api/v1/payments/bill/verify/",
         "CASHIN"=> "api/v1/payments/cash-in/",
+        "BANKS"=> "api/v1/bank/all",
         "BANKS_ALL"=> "api/v1/bank/all",
     );
 
@@ -63,12 +64,12 @@ class IhelaMerchant
         // echo 'Access Token: ' . $accessToken->getToken() . "<br>";
         $this->_auth_token_object =array(
             "access_token" => $accessToken, 
-            "access_token" => "sdhsj73843jedkHyskHM",
+            // "access_token" => "sdhsj73843jedkHyskHM",
             "expires_in" => $accessToken->getExpires(),
             "token_type" => $accessToken->getValues()["token_type"],
             "scope" => $accessToken->getValues()["scope"]
         );
-        print_r($this->_auth_token_object);
+        // print_r($this->_auth_token_object);
     }
 
     // protected function getAuthHeader() {
@@ -82,9 +83,9 @@ class IhelaMerchant
         $payload =array(
             'amount' => $amount, 
             'merchant_reference' => $merchant_reference, 
-            'description', $description, 
+            'description' => $description,
             'user' => $user, 
-            "redirect_uri", $redirect_uri
+            "redirect_uri" => $redirect_uri
         );
 
         // $curl = \curl_init();
@@ -104,22 +105,37 @@ class IhelaMerchant
         //   CURLOPT_POSTFIELDS => $payload,
         // ));
 
+        // print_r($payload);
+
         $request = $this->_provider->getAuthenticatedRequest(
             'POST',
             $url,
             $this->_auth_token_object["access_token"],
             array(
-                "headers" => array('Content-Type' => 'application/json', 'Accept' => 'application/json'), 
+                "headers" => array('Content-Type' => 'application/json', 'Accept' => 'application/json'),
                 "body" => json_encode($payload)
             )
         );
-        print_r($request);
 
-        $response = $this->_http_client->send($request);
+        // $options['body'] = json_encode($payload);
+        // $options['headers']['Content-Type'] = 'application/json;charset=UTF-8';
+        // $options['headers']['access_token'] = $this->_auth_token_object["access_token"].getToken();
+        // // $options['headers']['access_token'] = $this->_auth_token_object["access_token"];
 
-        print_r($response->getContents());
+        // $request = $this->_provider->getAuthenticatedRequest(
+        //     'POST',
+        //     $url,
+        //     '',  // access_token needed in header instead
+        //     $options
+        // );
 
-        return $response;
+        // print_r($request);
+
+        $response = $this->_provider->getResponse($request);
+
+        // print_r($response);
+
+        return json_decode($response->getBody());
 
         // $response = curl_exec($curl);
 
@@ -175,9 +191,34 @@ class IhelaMerchant
     //     return $response->getBody();
     // }
 
-    public function getBanks() {
+    public function getBanksAll() {
 
         $url = $this->_api_url .'/'. self::IHELA_ENDPOINTS["BANKS_ALL"];
+
+        $curl = \curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_HTTPHEADER => array('Content-Type:application/json', 'Authorization:Token '.$this->_auth_token_object["access_token"]),
+          CURLOPT_URL => $url,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "GET",
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        return json_decode($response, true);
+
+    }
+
+    public function getBanks() {
+
+        $url = $this->_api_url .'/'. self::IHELA_ENDPOINTS["BANKS"];
 
         $curl = \curl_init();
 
