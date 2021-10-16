@@ -30,7 +30,7 @@ class IhelaMerchant
 
     public function __construct($client_id, $client_secret, $prod=false) {
         if ($prod) {
-            $this->_api_url = 'https://api.ihela.online';
+            $this->_api_url = 'https://api.ihela.bi';
         } else {
             $this->_api_url = 'https://testgate.ihela.online';
             //$this->_api_url = 'http://127.0.0.1:8080';
