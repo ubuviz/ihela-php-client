@@ -1,6 +1,6 @@
 # iHela PHP Client
 
-This is the repository for a Php client for consuming the iHela Crédit Union API for financial services in Burundi. The API gateway can be found on https://testgate.ihela.online/.
+This is the repository for a Php client for consuming the iHela Crédit Union API for financial services in Burundi. The API documentation can be found on https://docs.ihela.bi/.
 PHP Client for iHela API
 
 ## Install composer
