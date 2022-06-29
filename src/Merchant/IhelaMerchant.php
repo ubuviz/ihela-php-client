@@ -38,7 +38,7 @@ class IhelaMerchant {
 			if ($prod) {
 				$this->_api_url = 'https://api.ihela.bi';
 				$this->_oauth2_url = 'https://oa2.ihela.bi';
-				echo "PROD";
+				// echo "PROD";
 			} else {
 				$this->_api_url = 'https://testgate.ihela.online';
 				$this->_oauth2_url = 'https://testgate.ihela.online/oAuth2';
@@ -68,7 +68,7 @@ class IhelaMerchant {
 	}
 
 	protected function getOAuth2Url($url) {
-		echo ($this->_oauth2_url . '/' . $url . '       ');
+		// echo ($this->_oauth2_url . '/' . $url . '       ');
 		return $this->_oauth2_url . '/' . $url;
 	}
 
@@ -125,7 +125,7 @@ class IhelaMerchant {
 	}
 
 	public function verifyBill($code, $reference) {
-		$url = $this->getUrl(self::IHELA_ENDPOINTS["BILL_VERIFY"]);
+		$url = $this->getUrl($this::IHELA_ENDPOINTS["BILL_VERIFY"]);
 		$payload = array('reference' => $reference, 'code' => $code);
 
 		$request = $this->_provider->getAuthenticatedRequest(

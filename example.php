@@ -5,12 +5,16 @@ require_once 'src/Merchant/IhelaMerchant.php';
 
 use Ihela\Merchant\IhelaMerchant;
 
-$clientID = "4sS7OWlf8pqm04j1ZDtvUrEVSZjlLwtfGUMs2XWZ";
-$clientSecret = "HN7osYwSJuEOO4MEth6iNlBS8oHm7LBhC8fejkZkqDJUrvVQodKtO55bMr845kmplSlfK3nxFcEk2ryiXzs1UW1YfVP5Ed6Yw0RR6QmnwsQ7iNJfzTgeehZ2XM9mmhC3";
+// $clientID = "4sS7OWlf8pqm04j1ZDtvUrEVSZjlLwtfGUMs2XWZ";
+// $clientSecret = "HN7osYwSJuEOO4MEth6iNlBS8oHm7LBhC8fejkZkqDJUrvVQodKtO55bMr845kmplSlfK3nxFcEk2ryiXzs1UW1YfVP5Ed6Yw0RR6QmnwsQ7iNJfzTgeehZ2XM9mmhC3";
+
+$clientID = "mhNTwp8PGhgxuXiOTZiJcPOv5km1CUg9Iwb1Iqg4";
+$clientSecret = "E8qYLStKf6zCcLZ3KTR5iBXWXVLEXZHKmLHgQGQugmfyf8CIGhHdg3ny2BZhV6J0nNmatjNlYqLDY30GnA31y3Q3zFtUlJj8pIcjPEkwxNun2eCb5Jk72X6r5xtDmDdW";
 
 $myReference = "EXAMPLE" . rand();
 
-$ihela = new IhelaMerchant($clientID, $clientSecret);
+// $ihela = new IhelaMerchant($clientID, $clientSecret);
+$ihela = new IhelaMerchant($clientID, $clientSecret, null, true);
 
 $banks = $ihela->getBanks();
 print_r($banks);
