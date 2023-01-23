@@ -72,6 +72,7 @@ Response sample
 
 {
     "account_number": "000001-01",
+    "customer_id": "16",
     "name": "Niheza Jonas"
 } */
 ```
@@ -139,8 +140,8 @@ Sometimes, you will have to refund money to a customer.
 ```php
 // V. Cashin
 
-$test->cashinClient($banks->banks[0]->slug, $lookup->account_number, 3000, "REF2", "cashin description");
+$test->cashinClient($banks->banks[0]->slug, $lookup->account_number, $lookup->name, 3000, "REF2", "cashin description");
 ```
 # Support
 
-Email : support@ihela.online
+Emails : support@ihela.online , info@ihela.online
