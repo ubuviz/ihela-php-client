@@ -1,5 +1,6 @@
+repos:
 - repo: git@github.com:hootsuite/pre-commit-php.git
-  sha: 1.1.0
+  rev: 1.1.0
   hooks:
   - id: php-lint
   - id: php-unit
