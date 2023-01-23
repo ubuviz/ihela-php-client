@@ -32,10 +32,11 @@ use Ihela\Merchant\IhelaMerchant;
 $client_id = "4sS7OWlf8pqm04j1ZDtvUrEVSZjlLwtfGUMs2XWZ";
 $client_secret = "HN7osYwSJuEOO4MEth6iNlBS8oHm7LBhC8fejkZkqDJUrvVQodKtO55bMr845kmplSlfK3nxFcEk2ryiXzs1UW1YfVP5Ed6Yw0RR6QmnwsQ7iNJfzTgeehZ2XM9mmhC3";
 $is_prod = false;
+$pin_code = '1234'; // Given by iHela
 
 
 // I. get the iHela client
-$ihela = new IhelaMerchant($client_id, $client_secret, null, $is_prod)
+$ihela = new IhelaMerchant($client_id, $client_secret, $pin_code, null, $is_prod)
 
 ```
 
@@ -48,6 +49,14 @@ You will often have to fetch for bank list.
 ```php
 // IV. Banks Lookup
 $banks = $ihela->getBanks();
+
+/*
+Response sample
+
+{
+    "objects": [...]
+    "count": 4
+} */
 ```
 
 ## Customer Lookup
@@ -56,7 +65,7 @@ You will often have to check the customer information to help the user know if t
 
 ```php
 // Customer Lookup
-$lookup = $ihela->customerLookup($banks->banks[0]->slug, "jonasnih@gmail.com");
+$lookup = $ihela->customerLookup($banks->objects[0]->slug, "jonasnih@gmail.com");
 
 /*
 Response sample

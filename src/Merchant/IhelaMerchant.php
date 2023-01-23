@@ -13,26 +13,30 @@ class IhelaMerchant {
 	protected $_client_id;
 	protected $_client_secret;
 	protected $_provider;
-	protected $_http_client;
+    protected $_http_client;
+	protected $_pin_code;
 
 	const IHELA_TOKEN_URL = "token/";
 	const IHELA_AUTH_URL = "authorize/";
 	const IHELA_ENDPOINTS = array(
-		"USER_INFO" => "api/v1/connected-user/",
-		"BILL_INIT" => "api/v1/payments/bill/init/",
-		"BILL_VERIFY" => "api/v1/payments/bill/verify/",
-		"CASHIN" => "api/v1/payments/cash-in/",
-		// "BANKS"=> "api/v1/bank/all",
-		"BANKS" => "api/v1/payments/bank/",
-		"BANKS_ALL" => "api/v1/bank/all",
-		"LOOKUP" => "api/v1/bank/%s/account/lookup/",
+        "PING" => "api/v2/ping/",
+		"USER_INFO" => "api/v2/connected-user/",
+		"BILL_INIT" => "api/v2/payments/bill/init/",
+		"BILL_VERIFY" => "api/v2/payments/bill/verify/",
+		"CASHIN" => "api/v2/payments/cash-in/",
+		// "BANKS"=> "api/v2/bank/all",
+		"BANKS" => "api/v2/payments/bank/",
+		"BANKS_ALL" => "api/v2/payments/bank/%s/",
+		"LOOKUP" => "api/v2/bank/%s/account/lookup/",
 	);
 
-	public function __construct($client_id, $client_secret, $custom_url = null, $prod = false) {
+	public function __construct($client_id, $client_secret, $pin_code, $custom_url = null, $custom_oauth2_url = null, $prod = false) {
+
+        $this->_pin_code = $pin_code;
 
 		if ($custom_url != null) {
 			$this->_api_url = $custom_url;
-			$this->_oauth2_url = $custom_url;
+			$this->_oauth2_url = $custom_oauth2_url;
 			$prod = false;
 		} else {
 			if ($prod) {
@@ -40,8 +44,8 @@ class IhelaMerchant {
 				$this->_oauth2_url = 'https://oa2.ihela.bi';
 				// echo "PROD";
 			} else {
-				$this->_api_url = 'https://testgate.ihela.online';
-				$this->_oauth2_url = 'https://testgate.ihela.online/oAuth2';
+				$this->_api_url = 'http://testproxy.ihela.bi:8080';
+				$this->_oauth2_url = 'http://testproxy.ihela.bi:8080/oAuth2';
 				//$this->_api_url = 'http://127.0.0.1:8080';
 			}
 		}
@@ -71,6 +75,12 @@ class IhelaMerchant {
 		// echo ($this->_oauth2_url . '/' . $url . '       ');
 		return $this->_oauth2_url . '/' . $url;
 	}
+
+    protected function ping() {
+        $response = $this->_http_client->request('GET', $this->getUrl(self::IHELA_ENDPOINTS["PING"]));
+
+        return json_decode($response->getBody());
+    }
 
 	/**
 	Authenticates the merchant application in iHela
@@ -148,14 +158,16 @@ class IhelaMerchant {
 
 	}
 
-	public function cashinClient($bank_slug, $account, $amount, $merchant_reference, $description) {
+	public function cashinClient($bank_slug, $account, $account_holder, $amount, $merchant_reference, $description) {
 		$url = $this->getUrl(self::IHELA_ENDPOINTS["CASHIN"]);
 		$payload = array(
-			'bank_slug' => $bank_slug,
-			'account' => $account,
+			'credit_bank' => $bank_slug,
+			'credit_account' => $account,
+            'credit_account_holder' => $account_holder,
 			'amount' => $amount,
 			'merchant_reference' => $merchant_reference,
 			'description' => $description,
+            'pin_code' => $this->_pin_code,
 		);
 
 		$request = $this->_provider->getAuthenticatedRequest(
@@ -190,33 +202,42 @@ class IhelaMerchant {
 
 		$response = $this->_provider->getResponse($request);
 
-		return json_decode($response->getBody());
+		return json_decode($response->getBody())->response_data;
 
 	}
 
-	public function getBanks() {
-		// $response = $this->_http_client->request('GET', self::IHELA_ENDPOINTS["BANKS"]);
-
-		// return json_decode($response->getBody());
+	public function getBanks($list_type = null) {
+        if(!$list_type){
+            $list_type = "cashin";
+        }
 
 		$request = $this->_provider->getAuthenticatedRequest(
 			'GET',
-			$this->getUrl(self::IHELA_ENDPOINTS["BANKS"]),
+			$this->getUrl(sprintf(self::IHELA_ENDPOINTS["BANKS_ALL"], $list_type)),
 			$this->_auth_token_object["access_token"],
 			[
 				"headers" => array('Content-Type' => 'application/json', 'Accept' => 'application/json'),
 			]
 		);
 
-		$response = $this->_provider->getResponse($request);
-
-		return json_decode($response->getBody());
+        $response = $this->_provider->getResponse($request);
+        $response_body = json_decode($response->getBody());
+        if($response_body->success){
+    		return $response_body->response_data;
+        } else{
+            return $response_body;
+        }
 	}
 
 	public function customerLookup($bank_slug, $customer_id) {
-		$response = $this->_http_client->request('GET', sprintf(self::IHELA_ENDPOINTS["LOOKUP"], $bank_slug), ['query' => ['customer_id' => $customer_id]]);
+		$response = $this->_http_client->request('GET', sprintf(self::IHELA_ENDPOINTS["LOOKUP"], $bank_slug), ['query' => ['account_number' => $customer_id]]);
 
-		return json_decode($response->getBody());
+        $response_body = json_decode($response->getBody());
+        if($response_body->success){
+            return $response_body->response_data;
+        } else{
+            return $response_body;
+        }
 	}
 
 }
